@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vexo Engineering — Industrial Mechanical Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --white: #ffffff;
+  --off-white: #f5f5f3;
+  --light: #e8e8e6;
+  --mid: #a8a8a6;
+  --dim: #5e5e5c;
+  --dark: #141412;
+  --darker: #0c0c0b;
+  --navy: #0d1f32;
+  --blue: #1a5276;
+  --blue-mid: #1e6091;
+  --blue-light: #2e86c1;
+  --line: rgba(255,255,255,0.06);
+  --line-hover: rgba(30,96,145,0.35);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--darker);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--darker); }
+::-webkit-scrollbar-thumb { background: var(--blue); }
+
+/* ─── CURSOR ─── */
+.cur { width:8px; height:8px; background:var(--white); border-radius:50%; position:fixed; z-index:9999; pointer-events:none; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:transform .15s; }
+.cur-ring { width:32px; height:32px; border:1px solid rgba(255,255,255,0.15); border-radius:50%; position:fixed; z-index:9998; pointer-events:none; transform:translate(-50%,-50%); }
+
+/* ─── NAV ─── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  height:70px; display:flex; align-items:center; padding:0 5vw;
+  transition:background .5s, border-color .5s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled { background:rgba(12,12,11,0.94); backdrop-filter:blur(24px); border-bottom-color:var(--line); }
+
+.n-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.n-logo img { width:40px; height:40px; object-fit:contain; filter:drop-shadow(0 0 6px rgba(30,96,145,0.4)) brightness(1.1); opacity:1; transition:.3s; }
+.n-logo:hover img { filter:drop-shadow(0 0 10px rgba(30,96,145,0.7)) brightness(1.2); opacity:1; }
+.n-logo-text { font-family:'Syne',sans-serif; font-weight:700; font-size:.9rem; letter-spacing:.07em; text-transform:uppercase; color:var(--white); }
+
+.n-links { display:flex; align-items:center; gap:2.2rem; margin:0 auto; }
+.n-links a { font-size:.72rem; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); text-decoration:none; transition:color .25s; }
+.n-links a:hover { color:var(--white); }
+
+.n-cta { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--white); border:1px solid rgba(255,255,255,0.18); padding:9px 22px; text-decoration:none; transition:all .25s; white-space:nowrap; }
+.n-cta:hover { background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.4); }
+
+.hbg { display:none; flex-direction:column; gap:5px; cursor:pointer; margin-left:auto; }
+.hbg span { display:block; width:22px; height:1.5px; background:var(--white); transition:.3s; }
+
+/* ─── HERO ─── */
+#home {
+  min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end;
+  padding:0 5vw 90px; position:relative; overflow:hidden;
+}
+
+.h-bg { position:absolute; inset:0; background:var(--darker); }
+
+.h-orb {
+  position:absolute; border-radius:50%; pointer-events:none;
+  width:900px; height:900px;
+  top:-250px; right:-200px;
+  background:radial-gradient(circle, rgba(30,96,145,0.1) 0%, rgba(13,32,53,0.05) 45%, transparent 70%);
+  animation:orbFloat 10s ease-in-out infinite;
+}
+.h-orb2 {
+  width:600px; height:600px;
+  bottom:-100px; left:-100px;
+  background:radial-gradient(circle, rgba(30,96,145,0.05) 0%, transparent 70%);
+  animation:orbFloat 14s ease-in-out infinite reverse;
+}
+@keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-40px) scale(1.06);} }
+
+.h-grid {
+  position:absolute; inset:0;
+  background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
+}
+
+.h-vert-line { position:absolute; top:0; bottom:0; width:1px; background:linear-gradient(180deg,transparent,rgba(30,96,145,0.25) 30%,rgba(30,96,145,0.4) 65%,transparent); }
+.h-vert-line:nth-child(1){ right:28vw; }
+.h-vert-line:nth-child(2){ right:58vw; opacity:.5; }
+
+.h-content { position:relative; z-index:2; max-width:1300px; }
+
+.h-label {
+  display:flex; align-items:center; gap:14px; margin-bottom:2.8rem;
+  opacity:0; animation:riseUp .8s .3s forwards;
+}
+.h-label-line { width:36px; height:1px; background:var(--blue-mid); }
+.h-label-text { font-size:.68rem; font-weight:400; letter-spacing:.22em; text-transform:uppercase; color:var(--blue-mid); }
+
+.h-headline {
+  font-family:'Syne',sans-serif; font-weight:800;
+  font-size:clamp(3rem,6.8vw,7.2rem);
+  line-height:.98; letter-spacing:-.03em;
+  margin-bottom:3rem;
+  opacity:0; animation:riseUp .9s .5s forwards;
+}
+.h-headline .outline { color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,0.2); }
+
+.h-bottom { display:flex; align-items:flex-end; gap:80px; flex-wrap:wrap; opacity:0; animation:riseUp .8s .75s forwards; }
+
+.h-desc { font-size:.98rem; font-weight:300; line-height:1.82; color:var(--mid); max-width:430px; }
+
+.h-btns { display:flex; gap:12px; margin-top:1.8rem; }
+
+.btn-solid { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:var(--white); color:var(--darker); padding:14px 30px; text-decoration:none; transition:opacity .25s,transform .2s; display:inline-block; }
+.btn-solid:hover { opacity:.88; transform:translateY(-1px); }
+
+.btn-outline { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.16); padding:14px 30px; text-decoration:none; transition:all .25s; display:inline-block; }
+.btn-outline:hover { border-color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.03); }
+
+.h-stats { display:flex; gap:44px; }
+.hst { }
+.hst-n { font-family:'Syne',sans-serif; font-weight:700; font-size:2.1rem; color:var(--white); line-height:1; }
+.hst-l { font-size:.64rem; font-weight:400; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin-top:5px; }
+
+.h-scroll { position:absolute; bottom:40px; right:5vw; display:flex; flex-direction:column; align-items:center; gap:8px; z-index:2; opacity:0; animation:fadeIn 1s 1.3s forwards; }
+.h-scroll-line { width:1px; height:50px; background:linear-gradient(180deg,transparent,rgba(255,255,255,0.25)); animation:scrollAnim 2.2s ease-in-out infinite; }
+.h-scroll-text { font-size:.58rem; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); writing-mode:vertical-rl; }
+@keyframes scrollAnim { 0%{transform:scaleY(0);transform-origin:top;} 50%{transform:scaleY(1);transform-origin:top;} 51%{transform:scaleY(1);transform-origin:bottom;} 100%{transform:scaleY(0);transform-origin:bottom;} }
+
+/* ─── TICKER ─── */
+.ticker { border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding:14px 0; background:rgba(30,96,145,0.03); }
+.ticker-track { display:flex; animation:tickerAnim 32s linear infinite; white-space:nowrap; }
+.ticker-item { display:flex; align-items:center; gap:24px; padding:0 24px; font-size:.68rem; font-weight:400; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); flex-shrink:0; }
+.tdot { width:3px; height:3px; border-radius:50%; background:var(--blue-mid); flex-shrink:0; }
+@keyframes tickerAnim { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+/* ─── SECTION BASE ─── */
+section { padding:120px 5vw; }
+
+.sec-label { display:flex; align-items:center; gap:12px; font-size:.64rem; font-weight:400; letter-spacing:.22em; text-transform:uppercase; color:var(--blue-mid); margin-bottom:18px; }
+.sec-label::before { content:''; display:block; width:22px; height:1px; background:var(--blue-mid); flex-shrink:0; }
+
+h2.sec-title { font-family:'Syne',sans-serif; font-weight:700; font-size:clamp(1.9rem,3.2vw,2.9rem); line-height:1.1; letter-spacing:-.02em; color:var(--white); }
+h2.sec-title .ghost { color:transparent; -webkit-text-stroke:1px rgba(255,255,255,0.22); }
+
+p.sec-body { font-size:.95rem; font-weight:300; line-height:1.88; color:var(--mid); max-width:560px; }
+
+.reveal { opacity:0; transform:translateY(26px); transition:opacity .75s var(--ease), transform .75s var(--ease); }
+.reveal.in { opacity:1; transform:translateY(0); }
+.d1{transition-delay:.1s;} .d2{transition-delay:.2s;} .d3{transition-delay:.3s;} .d4{transition-delay:.4s;} .d5{transition-delay:.5s;}
+
+/* ─── ABOUT ─── */
+#about { background:var(--darker); display:grid; grid-template-columns:1fr 1fr; gap:100px; align-items:center; }
+
+.abt-visual { position:relative; aspect-ratio:1/1.1; }
+.abt-img { position:absolute; inset:0; background:linear-gradient(145deg,#0a1825 0%,#0d2035 100%); border:1px solid var(--line); overflow:hidden; }
+.abt-svg { width:100%; height:100%; }
+
+.abt-badge { position:absolute; bottom:-18px; left:-18px; background:var(--darker); border:1px solid var(--line); padding:22px 26px; min-width:170px; }
+.abt-badge-n { font-family:'Syne',sans-serif; font-weight:700; font-size:2.2rem; color:var(--white); line-height:1; }
+.abt-badge-n sup { font-size:1rem; color:var(--blue-mid); }
+.abt-badge-l { font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); margin-top:5px; }
+
+.abt-badge2 { position:absolute; top:-18px; right:-18px; background:var(--blue); padding:16px 20px; }
+.abt-badge2-t { font-family:'Syne',sans-serif; font-weight:600; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.85); }
+.abt-badge2-s { font-size:.62rem; color:rgba(255,255,255,.45); margin-top:3px; }
+
+.abt-list { margin-top:2.5rem; }
+.abt-li { display:flex; align-items:flex-start; gap:18px; padding:18px 0; border-bottom:1px solid var(--line); }
+.abt-li:first-child { border-top:1px solid var(--line); }
+.abt-li-n { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:600; letter-spacing:.1em; color:var(--blue-mid); margin-top:2px; flex-shrink:0; }
+.abt-li-t { font-family:'Syne',sans-serif; font-weight:600; font-size:.86rem; letter-spacing:.03em; text-transform:uppercase; margin-bottom:3px; }
+.abt-li-d { font-size:.8rem; font-weight:300; color:var(--dim); line-height:1.65; }
+
+/* ─── SERVICES ─── */
+#services { background:#0b0b0a; border-top:1px solid var(--line); }
+
+.svc-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:64px; gap:40px; flex-wrap:wrap; }
+.svc-top-right { max-width:360px; }
+
+.svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); }
+
+.svc-card { background:#0b0b0a; padding:44px 34px 48px; position:relative; overflow:hidden; transition:background .4s var(--ease); }
+.svc-card:hover { background:#101010; }
+
+.svc-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--blue-mid); transform:scaleY(0); transform-origin:bottom; transition:transform .5s var(--ease); }
+.svc-card:hover::before { transform:scaleY(1); }
+
+.svc-idx { font-size:.6rem; font-weight:400; letter-spacing:.16em; color:var(--dim); margin-bottom:30px; font-family:'Syne',sans-serif; }
+.svc-ico { width:42px; height:42px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; margin-bottom:22px; transition:border-color .3s; }
+.svc-card:hover .svc-ico { border-color:rgba(30,96,145,0.4); }
+.svc-ico svg { width:18px; height:18px; stroke:var(--mid); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; transition:stroke .3s; }
+.svc-card:hover .svc-ico svg { stroke:rgba(255,255,255,.7); }
+.svc-name { font-family:'Syne',sans-serif; font-weight:600; font-size:.98rem; margin-bottom:13px; line-height:1.3; }
+.svc-desc { font-size:.8rem; font-weight:300; color:var(--dim); line-height:1.78; }
+.svc-arr { position:absolute; bottom:34px; right:34px; font-size:.78rem; color:var(--dim); transition:color .3s,transform .3s; }
+.svc-card:hover .svc-arr { color:var(--white); transform:translate(3px,-3px); }
+
+/* ─── EXPERTISE ─── */
+#expertise { background:var(--darker); border-top:1px solid var(--line); }
+
+.exp-layout { display:grid; grid-template-columns:1fr 1.6fr; gap:100px; align-items:start; margin-top:60px; }
+
+.ind-row { margin-top:2.5rem; }
+.ind-item { display:flex; align-items:center; justify-content:space-between; padding:20px 0; border-bottom:1px solid var(--line); transition:all .3s; gap:16px; }
+.ind-item:first-child { border-top:1px solid var(--line); }
+.ind-left { display:flex; align-items:center; gap:16px; }
+.ind-n { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:600; letter-spacing:.1em; color:var(--dim); flex-shrink:0; }
+.ind-name { font-family:'Syne',sans-serif; font-size:.9rem; font-weight:500; transition:color .25s; }
+.ind-item:hover .ind-name { color:var(--white); }
+.ind-tag { font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); border:1px solid var(--line); padding:4px 10px; transition:all .3s; white-space:nowrap; }
+.ind-item:hover .ind-tag { border-color:var(--line-hover); color:var(--blue-mid); }
+
+.exp-right { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); }
+.exp-card { background:var(--darker); padding:36px 28px; }
+.exp-n { font-family:'Syne',sans-serif; font-weight:700; font-size:2.1rem; color:var(--white); line-height:1; margin-bottom:8px; }
+.exp-n span { font-size:.95rem; font-weight:400; color:var(--dim); }
+.exp-l { font-size:.65rem; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
+
+/* ─── QUALITY ─── */
+#quality { background:#0b0b0a; border-top:1px solid var(--line); }
+.q-top { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:end; margin-bottom:64px; }
+.q-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); }
+
+.q-card { background:#0b0b0a; padding:44px 36px; position:relative; }
+.q-card::after { content:attr(data-n); position:absolute; top:24px; right:24px; font-family:'Syne',sans-serif; font-weight:800; font-size:5.5rem; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(255,255,255,0.03); pointer-events:none; }
+
+.q-ico { width:38px; height:38px; border:1px solid rgba(30,96,145,0.25); display:flex; align-items:center; justify-content:center; margin-bottom:22px; }
+.q-ico svg { width:17px; height:17px; stroke:var(--blue-mid); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.q-title { font-family:'Syne',sans-serif; font-weight:600; font-size:.98rem; margin-bottom:12px; }
+.q-body { font-size:.8rem; font-weight:300; color:var(--dim); line-height:1.8; }
+.q-bar { margin-top:26px; height:1px; background:rgba(255,255,255,0.06); position:relative; overflow:hidden; }
+.q-bar-fill { position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg,var(--blue),rgba(255,255,255,.35)); width:0; transition:width 1.8s var(--ease); }
+
+/* ─── SAFETY ─── */
+#safety { padding:0; border-top:1px solid var(--line); }
+.saf-grid { display:grid; grid-template-columns:1fr 1fr; }
+
+.saf-left { padding:100px 5vw; background:var(--darker); border-right:1px solid var(--line); }
+.saf-right { padding:100px 5vw; background:var(--blue); position:relative; overflow:hidden; }
+.saf-right::before { content:'ZERO'; position:absolute; bottom:-30px; right:-20px; font-family:'Syne',sans-serif; font-weight:800; font-size:11rem; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.06); pointer-events:none; white-space:nowrap; }
+.saf-right .sec-label { color:rgba(255,255,255,.45); }
+.saf-right .sec-label::before { background:rgba(255,255,255,.3); }
+
+.saf-big { font-family:'Syne',sans-serif; font-weight:800; font-size:5.8rem; line-height:1; color:var(--white); margin:22px 0 8px; }
+.saf-sub { font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); }
+
+.saf-list { margin-top:2.2rem; display:flex; flex-direction:column; gap:13px; }
+.saf-li { display:flex; align-items:flex-start; gap:13px; font-size:.83rem; font-weight:300; line-height:1.65; color:rgba(255,255,255,.7); }
+.saf-dot { width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,.45); flex-shrink:0; margin-top:8px; }
+
+/* ─── MISSION ─── */
+#mission { background:var(--darker); border-top:1px solid var(--line); }
+.mv-hd { text-align:center; max-width:600px; margin:0 auto 72px; }
+.mv-hd .sec-label { justify-content:center; }
+.mv-hd .sec-label::before { display:none; }
+
+.mv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); }
+.mv-card { background:var(--darker); padding:46px 34px; position:relative; }
+.mv-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:transparent; transition:background .4s; }
+.mv-card:hover::after { background:var(--blue-mid); }
+.mv-ico { width:46px; height:46px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; margin-bottom:26px; }
+.mv-ico svg { width:19px; height:19px; stroke:var(--mid); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.mv-title { font-family:'Syne',sans-serif; font-weight:600; font-size:1rem; margin-bottom:13px; }
+.mv-body { font-size:.8rem; font-weight:300; color:var(--dim); line-height:1.8; }
+
+.vis-strip { margin-top:1px; background:var(--darker); border:1px solid var(--line); border-top:none; padding:52px 5vw; display:flex; align-items:flex-start; gap:72px; }
+.vs-left { flex:0 0 200px; }
+.vs-qm { font-family:'Syne',sans-serif; font-weight:800; font-size:5.5rem; line-height:.65; color:var(--blue); opacity:.3; margin-top:14px; }
+.vs-text { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:500; line-height:1.65; letter-spacing:-.01em; color:rgba(255,255,255,.82); flex:1; }
+
+/* ─── WHY ─── */
+#why { background:#0b0b0a; border-top:1px solid var(--line); }
+.why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); margin-top:60px; }
+.why-card { background:#0b0b0a; padding:40px 30px; transition:background .4s; }
+.why-card:hover { background:#101010; }
+.wc-n { font-family:'Syne',sans-serif; font-weight:800; font-size:3.2rem; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.08); margin-bottom:22px; transition:-webkit-text-stroke-color .3s; }
+.why-card:hover .wc-n { -webkit-text-stroke-color:rgba(30,96,145,.3); }
+.wc-t { font-family:'Syne',sans-serif; font-weight:600; font-size:.9rem; letter-spacing:.01em; margin-bottom:11px; }
+.wc-b { font-size:.79rem; font-weight:300; color:var(--dim); line-height:1.82; }
+.why-strip { margin-top:1px; padding:24px 0; border:1px solid var(--line); border-top:none; display:flex; align-items:center; justify-content:center; gap:52px; flex-wrap:wrap; background:#0b0b0a; }
+.ws-item { font-size:.65rem; letter-spacing:.15em; text-transform:uppercase; color:var(--dim); display:flex; align-items:center; gap:9px; }
+.ws-item::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--blue-mid); flex-shrink:0; }
+
+/* ─── CONTACT ─── */
+#contact { background:var(--darker); border-top:1px solid var(--line); }
+.ct-layout { display:grid; grid-template-columns:1fr 1.25fr; gap:100px; margin-top:60px; align-items:start; }
+
+.ct-details { margin-top:2.8rem; }
+.ct-row { padding:20px 0; border-bottom:1px solid var(--line); }
+.ct-row:first-child { border-top:1px solid var(--line); }
+.ct-lbl { font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); margin-bottom:6px; }
+.ct-val { font-family:'Syne',sans-serif; font-size:.92rem; font-weight:500; color:var(--white); line-height:1.55; }
+.ct-val a { color:var(--white); text-decoration:none; transition:color .2s; }
+.ct-val a:hover { color:var(--mid); }
+
+.ct-gstin { margin-top:1.8rem; padding:18px 22px; border:1px solid var(--line); background:rgba(255,255,255,0.02); }
+.ct-gstin-l { font-size:.58rem; letter-spacing:.18em; text-transform:uppercase; color:var(--blue-mid); margin-bottom:5px; }
+.ct-gstin-v { font-family:'Syne',sans-serif; font-size:.86rem; font-weight:600; letter-spacing:.05em; color:var(--mid); }
+
+.f-group { margin-bottom:2px; }
+.f-label { display:block; margin-bottom:5px; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
+.f-input,.f-textarea,.f-select { width:100%; background:rgba(255,255,255,0.025); border:1px solid var(--line); color:var(--white); font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:300; padding:13px 16px; outline:none; transition:border-color .25s,background .25s; -webkit-appearance:none; }
+.f-input::placeholder,.f-textarea::placeholder { color:var(--dim); }
+.f-input:focus,.f-textarea:focus,.f-select:focus { border-color:rgba(30,96,145,.5); background:rgba(30,96,145,.03); }
+.f-textarea { resize:vertical; min-height:118px; }
+.f-select option { background:#0c0c0b; }
+.f-row { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:2px; }
+.f-row .f-group { margin-bottom:0; }
+.f-btn { width:100%; margin-top:2px; font-family:'Syne',sans-serif; font-size:.73rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; background:var(--white); color:var(--darker); border:none; padding:17px 30px; cursor:pointer; transition:background .25s; }
+.f-btn:hover { background:var(--off-white); }
+
+/* ─── FOOTER ─── */
+footer { border-top:1px solid var(--line); background:var(--darker); padding:44px 5vw; }
+.ft-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; padding-bottom:28px; border-bottom:1px solid var(--line); }
+.ft-logo { display:flex; align-items:center; gap:9px; }
+.ft-logo img { width:30px; height:30px; object-fit:contain; filter:brightness(0.9) saturate(0.8); opacity:.7; }
+.ft-logo-t { font-family:'Syne',sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.07em; text-transform:uppercase; color:var(--mid); }
+.ft-nav { display:flex; gap:1.8rem; list-style:none; flex-wrap:wrap; }
+.ft-nav a { font-size:.68rem; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); text-decoration:none; transition:color .2s; }
+.ft-nav a:hover { color:var(--mid); }
+.ft-bot { padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+.ft-copy { font-size:.68rem; font-weight:300; letter-spacing:.04em; color:var(--dim); }
+.ft-tag { font-family:'Syne',sans-serif; font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes riseUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1080px){
+  #about{grid-template-columns:1fr;gap:60px;}
+  .abt-visual{max-width:480px;}
+  .exp-layout{grid-template-columns:1fr;gap:60px;}
+  .exp-right{grid-template-columns:repeat(4,1fr);}
+  .q-top{grid-template-columns:1fr;gap:36px;}
+  .mv-grid{grid-template-columns:1fr 1fr;}
+  .why-grid{grid-template-columns:repeat(2,1fr);}
+  .ct-layout{grid-template-columns:1fr;gap:56px;}
+}
+@media(max-width:768px){
+  .n-links{display:none;}
+  .n-links.open{display:flex;flex-direction:column;position:fixed;inset:70px 0 0 0;background:rgba(12,12,11,.97);backdrop-filter:blur(20px);padding:44px 5vw;gap:0;z-index:999;}
+  .n-links.open a{padding:16px 0;border-bottom:1px solid var(--line);font-size:.95rem;}
+  .n-cta{display:none;}
+  .hbg{display:flex;}
+  #home{padding-bottom:64px;}
+  .h-headline{font-size:clamp(2.4rem,10vw,4.2rem);}
+  .h-stats{gap:28px;flex-wrap:wrap;}
+  .h-bottom{gap:36px;}
+  section{padding:80px 5vw;}
+  .svc-grid{grid-template-columns:1fr;}
+  .svc-top{flex-direction:column;align-items:flex-start;}
+  .exp-right{grid-template-columns:1fr 1fr;}
+  .q-grid{grid-template-columns:1fr;}
+  .saf-grid{grid-template-columns:1fr;}
+  .saf-left,.saf-right{padding:64px 5vw;}
+  .mv-grid{grid-template-columns:1fr;}
+  .vis-strip{flex-direction:column;gap:36px;}
+  .vs-left{flex:unset;}
+  .why-grid{grid-template-columns:1fr;}
+  .why-strip{gap:24px;}
+  footer{padding:32px 5vw;}
+  .ft-top{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home" class="n-logo">
+    <img src="Vexo_engineering.png" alt="Vexo" id="logoImg">
+    <span class="n-logo-text">Vexo Engineering</span>
+  </a>
+  <div class="n-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#expertise">Expertise</a>
+    <a href="#quality">Quality</a>
+    <a href="#mission">Mission</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="n-cta">Get In Touch →</a>
+  <div class="hbg" id="hbg" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="h-bg">
+    <div class="h-orb"></div>
+    <div class="h-orb h-orb2"></div>
+    <div class="h-grid"></div>
+    <div class="h-vert-line"></div>
+    <div class="h-vert-line"></div>
+  </div>
+
+  <div class="h-content">
+    <div class="h-label">
+      <div class="h-label-line"></div>
+      <span class="h-label-text"></span>
+    </div>
+
+     <div class="h-content">
+    <div class="h-label">
+      <div class="h-label-line"></div>
+      <span class="h-label-text"></span>
+    </div>
+    
+    <h1 class="h-headline">
+      Precision<br>
+      Engineering<br>
+      <span class="outline">Built to Last.</span>
+    </h1>
+    <div class="h-bottom">
+      <div>
+        <p class="h-desc">Vexo Engineering delivers reliable, safe, and cost-effective mechanical solutions for industrial projects across India — backed by over a decade of hands-on field expertise.</p>
+        <div class="h-btns">
+          <a href="#services" class="btn-solid">Explore Services</a>
+          <a href="#contact" class="btn-outline">Request Consultation</a>
+        </div>
+      </div>
+      <div class="h-stats">
+        <div class="hst"><div class="hst-n">10+</div><div class="hst-l">Years Experience</div></div>
+        <div class="hst"><div class="hst-n">6</div><div class="hst-l">Core Services</div></div>
+        <div class="hst"><div class="hst-n">PAN</div><div class="hst-l">India Reach</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="h-scroll"><span class="h-scroll-text">Scroll</span><div class="h-scroll-line"></div></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <div class="ticker-item"><span class="tdot"></span>SS Pipeline Installation</div>
+    <div class="ticker-item"><span class="tdot"></span>Fire Fighting Line Installation</div>
+    <div class="ticker-item"><span class="tdot"></span>MS &amp; SS Fabrication</div>
+    <div class="ticker-item"><span class="tdot"></span>Erection Works</div>
+    <div class="ticker-item"><span class="tdot"></span>Mechanical Manpower Supply</div>
+    <div class="ticker-item"><span class="tdot"></span>Mechanical Spares Supply</div>
+    <div class="ticker-item"><span class="tdot"></span>PAN India Execution</div>
+    <div class="ticker-item"><span class="tdot"></span>10+ Years Industry Experience</div>
+    <div class="ticker-item"><span class="tdot"></span>SS Pipeline Installation</div>
+    <div class="ticker-item"><span class="tdot"></span>Fire Fighting Line Installation</div>
+    <div class="ticker-item"><span class="tdot"></span>MS &amp; SS Fabrication</div>
+    <div class="ticker-item"><span class="tdot"></span>Erection Works</div>
+    <div class="ticker-item"><span class="tdot"></span>Mechanical Manpower Supply</div>
+    <div class="ticker-item"><span class="tdot"></span>Mechanical Spares Supply</div>
+    <div class="ticker-item"><span class="tdot"></span>PAN India Execution</div>
+    <div class="ticker-item"><span class="tdot"></span>10+ Years Industry Experience</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="abt-visual reveal">
+    <div class="abt-img">
+      <svg class="abt-svg" viewBox="0 0 500 560" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1e6091" stop-opacity=".45"/><stop offset="100%" stop-color="#0d2035" stop-opacity=".15"/></linearGradient>
+          <linearGradient id="pg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1e6091" stop-opacity=".3"/><stop offset="100%" stop-color="#0d2035" stop-opacity=".08"/></linearGradient>
+        </defs>
+        <!-- Grid -->
+        <g stroke="rgba(30,96,145,0.1)" stroke-width=".8" fill="none">
+          <line x1="0" y1="80" x2="500" y2="80"/><line x1="0" y1="160" x2="500" y2="160"/><line x1="0" y1="240" x2="500" y2="240"/>
+          <line x1="0" y1="320" x2="500" y2="320"/><line x1="0" y1="400" x2="500" y2="400"/><line x1="0" y1="480" x2="500" y2="480"/>
+          <line x1="80" y1="0" x2="80" y2="560"/><line x1="160" y1="0" x2="160" y2="560"/><line x1="240" y1="0" x2="240" y2="560"/>
+          <line x1="320" y1="0" x2="320" y2="560"/><line x1="400" y1="0" x2="400" y2="560"/><line x1="480" y1="0" x2="480" y2="560"/>
+        </g>
+        <!-- Pipeline system -->
+        <rect x="60" y="234" width="380" height="12" rx="6" fill="url(#pg)"/>
+        <rect x="60" y="314" width="380" height="12" rx="6" fill="rgba(30,96,145,.18)"/>
+        <rect x="60" y="394" width="380" height="12" rx="6" fill="rgba(30,96,145,.12)"/>
+        <!-- Vertical risers -->
+        <rect x="140" y="190" width="12" height="224" rx="6" fill="rgba(30,96,145,.2)"/>
+        <rect x="244" y="190" width="12" height="264" rx="6" fill="rgba(30,96,145,.18)"/>
+        <rect x="348" y="190" width="12" height="184" rx="6" fill="rgba(30,96,145,.14)"/>
+        <!-- Flanges -->
+        <rect x="128" y="228" width="36" height="30" rx="2" fill="rgba(30,96,145,.4)" stroke="rgba(30,96,145,.6)" stroke-width=".8"/>
+        <rect x="232" y="228" width="36" height="30" rx="2" fill="rgba(30,96,145,.4)" stroke="rgba(30,96,145,.6)" stroke-width=".8"/>
+        <rect x="336" y="228" width="36" height="30" rx="2" fill="rgba(30,96,145,.32)" stroke="rgba(30,96,145,.5)" stroke-width=".8"/>
+        <!-- Pressure vessel -->
+        <ellipse cx="250" cy="96" rx="76" ry="24" fill="rgba(10,20,36,.95)" stroke="rgba(30,96,145,.4)" stroke-width="1"/>
+        <rect x="174" y="96" width="152" height="100" fill="rgba(10,20,36,.85)" stroke="rgba(30,96,145,.3)" stroke-width=".8"/>
+        <ellipse cx="250" cy="196" rx="76" ry="24" fill="rgba(10,20,36,.95)" stroke="rgba(30,96,145,.4)" stroke-width="1"/>
+        <!-- Gauge face -->
+        <circle cx="250" cy="142" r="28" fill="rgba(8,16,28,.95)" stroke="rgba(30,96,145,.4)" stroke-width="1"/>
+        <circle cx="250" cy="142" r="20" fill="none" stroke="rgba(30,96,145,.12)" stroke-width=".8"/>
+        <path d="M238,152 A14,14 0 0,1 262,152" fill="none" stroke="rgba(30,96,145,.35)" stroke-width="1"/>
+        <line x1="250" y1="142" x2="262" y2="130" stroke="rgba(255,255,255,.65)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="250" cy="142" r="2.5" fill="rgba(255,255,255,.5)"/>
+        <!-- Nodes -->
+        <circle cx="146" cy="240" r="6" fill="rgba(30,96,145,.8)" stroke="rgba(30,96,145,1)" stroke-width="1"/>
+        <circle cx="250" cy="240" r="6" fill="rgba(30,96,145,.8)" stroke="rgba(30,96,145,1)" stroke-width="1"/>
+        <circle cx="354" cy="240" r="6" fill="rgba(30,96,145,.6)" stroke="rgba(30,96,145,.8)" stroke-width="1"/>
+        <!-- Gear decoration -->
+        <g transform="translate(440,72)" fill="none" stroke="rgba(30,96,145,.28)" stroke-width="1">
+          <circle cx="0" cy="0" r="30"/><circle cx="0" cy="0" r="18"/><circle cx="0" cy="0" r="5" fill="rgba(30,96,145,.2)" stroke="none"/>
+          <rect x="-4" y="-34" width="8" height="7" rx="1"/><rect x="-4" y="27" width="8" height="7" rx="1"/>
+          <rect x="-34" y="-4" width="7" height="8" rx="1"/><rect x="27" y="-4" width="7" height="8" rx="1"/>
+        </g>
+        <!-- Scan line -->
+        <rect x="0" y="0" width="500" height="1.5" fill="rgba(30,96,145,.55)" opacity=".5">
+          <animateTransform attributeName="transform" type="translate" from="0,0" to="0,560" dur="5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;.6;0" dur="5s" repeatCount="indefinite"/>
+        </rect>
+        <!-- Measurement baseline -->
+        <line x1="60" y1="530" x2="440" y2="530" stroke="rgba(30,96,145,.2)" stroke-width=".8"/>
+        <line x1="60" y1="525" x2="60" y2="535" stroke="rgba(30,96,145,.2)" stroke-width=".8"/>
+        <line x1="250" y1="525" x2="250" y2="535" stroke="rgba(30,96,145,.2)" stroke-width=".8"/>
+        <line x1="440" y1="525" x2="440" y2="535" stroke="rgba(30,96,145,.2)" stroke-width=".8"/>
+        <text x="56" y="548" fill="rgba(30,96,145,.38)" font-size="7.5" font-family="monospace">0.0m</text>
+        <text x="238" y="548" fill="rgba(30,96,145,.38)" font-size="7.5" font-family="monospace">12.0m</text>
+        <text x="425" y="548" fill="rgba(30,96,145,.38)" font-size="7.5" font-family="monospace">24.0m</text>
+        <!-- Top accent -->
+        <rect x="0" y="0" width="500" height="2" fill="rgba(30,96,145,.55)"/>
+      </svg>
+    </div>
+    <div class="abt-badge">
+      <div class="abt-badge-n">10<sup>+</sup></div>
+      <div class="abt-badge-l">Years Industry<br>Experience</div>
+    </div>
+    <div class="abt-badge2">
+      <div class="abt-badge2-t">PAN India</div>
+      <div class="abt-badge2-s">Active Operations</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="sec-label reveal">About the Company</div>
+    <h2 class="sec-title reveal d1">Professionally<br>Managed.<br><span class="ghost">Execution Driven.</span></h2>
+    <p class="sec-body reveal d2" style="margin-top:1.2rem;">Vexo Engineering is a professionally managed engineering services company providing reliable, safe, and cost-effective mechanical solutions for industrial projects across India. We are driven by a strong execution mindset, backed by over a decade of hands-on experience.</p>
+    <div class="abt-list reveal d3">
+      <div class="abt-li"><div class="abt-li-n">01</div><div><div class="abt-li-t">Skilled & Trained Workforce</div><div class="abt-li-d">Supervisors, fitters, welders, and riggers selected for technical capability, field experience, and a thorough understanding of safety expectations.</div></div></div>
+      <div class="abt-li"><div class="abt-li-n">02</div><div><div class="abt-li-t">Site-Specific Execution</div><div class="abt-li-d">We adapt our approach to each project's unique site conditions, coordinating closely with client engineering and maintenance teams for seamless delivery.</div></div></div>
+      <div class="abt-li"><div class="abt-li-n">03</div><div><div class="abt-li-t">Safety-First Culture</div><div class="abt-li-d">PPE compliance, continuous supervision, and strict adherence to client safety guidelines are non-negotiable on every project we undertake.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="svc-top">
+    <div><div class="sec-label reveal">What We Do</div><h2 class="sec-title reveal d1">Core Services</h2></div>
+    <p class="sec-body svc-top-right reveal d2" style="font-size:.86rem;">Delivered through skilled manpower, disciplined site supervision, and strict adherence to quality and safety standards on every engagement.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card reveal"><div class="svc-idx">01 — Service</div><div class="svc-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div><div class="svc-name">SS Pipeline Installation</div><div class="svc-desc">Precision stainless steel pipeline installation across industrial plants and process facilities, with proper jointing and end-to-end execution oversight.</div><div class="svc-arr">↗</div></div>
+    <div class="svc-card reveal d1"><div class="svc-idx">02 — Service</div><div class="svc-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="svc-name">Fire Fighting Line Installation</div><div class="svc-desc">Complete installation of MS and GI firefighting systems, sprinkler networks, and hydrant lines in compliance with all applicable safety codes.</div><div class="svc-arr">↗</div></div>
+    <div class="svc-card reveal d2"><div class="svc-idx">03 — Service</div><div class="svc-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="svc-name">Mechanical Manpower Supply</div><div class="svc-desc">Deployment of trained mechanical workforce — supervisors, fitters, welders, and riggers — for industrial operations, project execution, and maintenance.</div><div class="svc-arr">↗</div></div>
+    <div class="svc-card reveal"><div class="svc-idx">04 — Service</div><div class="svc-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="svc-name">MS & SS Fabrication</div><div class="svc-desc">Custom fabrication of mild steel and stainless steel structures, pipe supports, platforms, and components to exact engineering and site specifications.</div><div class="svc-arr">↗</div></div>
+    <div class="svc-card reveal d1"><div class="svc-idx">05 — Service</div><div class="svc-ico"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><div class="svc-name">Erection Works</div><div class="svc-desc">Mechanical erection of equipment, structures, and systems within operational plants and shutdown environments, ensuring accuracy and safety throughout.</div><div class="svc-arr">↗</div></div>
+    <div class="svc-card reveal d2"><div class="svc-idx">06 — Service</div><div class="svc-ico"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div class="svc-name">Mechanical Spares Supply</div><div class="svc-desc">Reliable supply of quality mechanical spare parts and components to support industrial maintenance schedules, shutdowns, and unplanned operational needs.</div><div class="svc-arr">↗</div></div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section id="expertise">
+  <div class="sec-label reveal">Project Expertise</div>
+  <h2 class="sec-title reveal d1">Industries<br>We Serve</h2>
+  <div class="exp-layout">
+    <div>
+      <p class="sec-body reveal d2">Our project exposure spans some of India's most demanding industrial environments — enabling disciplined, adaptable execution wherever it's needed.</p>
+      <div class="ind-row reveal d3">
+        <div class="ind-item"><div class="ind-left"><span class="ind-n">01</span><span class="ind-name">Petrochemical Units</span></div><span class="ind-tag">Active</span></div>
+        <div class="ind-item"><div class="ind-left"><span class="ind-n">02</span><span class="ind-name">Textile & Dyeing Facilities</span></div><span class="ind-tag">Active</span></div>
+        <div class="ind-item"><div class="ind-left"><span class="ind-n">03</span><span class="ind-name">Sugar Mills</span></div><span class="ind-tag">Active</span></div>
+        <div class="ind-item"><div class="ind-left"><span class="ind-n">04</span><span class="ind-name">Process Industries</span></div><span class="ind-tag">Active</span></div>
+        <div class="ind-item"><div class="ind-left"><span class="ind-n">05</span><span class="ind-name">General Manufacturing Plants</span></div><span class="ind-tag">Active</span></div>
+      </div>
+    </div>
+    <div class="exp-right reveal d2">
+      <div class="exp-card"><div class="exp-n">PAN<span> India</span></div><div class="exp-l">Service Coverage</div></div>
+      <div class="exp-card"><div class="exp-n">10+<span> Yrs</span></div><div class="exp-l">Field Experience</div></div>
+      <div class="exp-card"><div class="exp-n">6<span> Core</span></div><div class="exp-l">Service Verticals</div></div>
+      <div class="exp-card"><div class="exp-n">5+<span> Sec</span></div><div class="exp-l">Industries Served</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUALITY -->
+<section id="quality">
+  <div class="q-top">
+    <div><div class="sec-label reveal">Our Standards</div><h2 class="sec-title reveal d1">Quality<br>Assurance</h2></div>
+    <p class="sec-body reveal d2">Every project is governed by four pillars that ensure consistent workmanship, safe practices, and reliable delivery across all industrial engagements.</p>
+  </div>
+  <div class="q-grid">
+    <div class="q-card reveal" data-n="01"><div class="q-ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="q-title">Execution Quality Control</div><div class="q-body">Clear supervision and disciplined work practices at every stage to ensure accurate installation, proper fabrication, and dependable execution on site.</div><div class="q-bar"><div class="q-bar-fill" data-w="92"></div></div></div>
+    <div class="q-card reveal d1" data-n="02"><div class="q-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="q-title">Safety-Integrated Work Practices</div><div class="q-body">PPE compliance, safe work methods, and site safety norms strictly followed during all project activities. Quality and safety are inseparable at Vexo.</div><div class="q-bar"><div class="q-bar-fill" data-w="98"></div></div></div>
+    <div class="q-card reveal d2" data-n="03"><div class="q-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="q-title">Skilled & Supervised Manpower</div><div class="q-body">All works carried out by trained technicians under experienced supervision to maintain consistency and adherence to client requirements at every stage.</div><div class="q-bar"><div class="q-bar-fill" data-w="88"></div></div></div>
+    <div class="q-card reveal d3" data-n="04"><div class="q-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div class="q-title">Continuous Monitoring & Coordination</div><div class="q-body">Regular on-site checks, progress tracking, and coordination with client teams ensure quality compliance, issue resolution, and timely project completion.</div><div class="q-bar"><div class="q-bar-fill" data-w="86"></div></div></div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section id="safety">
+  <div class="saf-grid">
+    <div class="saf-left">
+      <div class="sec-label reveal">Commitment to Safety</div>
+      <h2 class="sec-title reveal d1">Safety<br>Standards</h2>
+      <p class="sec-body reveal d2" style="margin-top:1.1rem;">Safety is a core part of how we plan and execute every project. All site activities are carried out in strict compliance with applicable safety norms, client guidelines, and approved work practices.</p>
+      <div class="saf-list reveal d3">
+        <div class="saf-li"><div class="saf-dot"></div>Mandatory PPE compliance on every site, every day, no exceptions.</div>
+        <div class="saf-li"><div class="saf-dot"></div>Teams trained to identify and proactively mitigate site hazards.</div>
+        <div class="saf-li"><div class="saf-dot"></div>Safety briefings delivered before and during all project phases.</div>
+        <div class="saf-li"><div class="saf-dot"></div>Continuous on-site supervision throughout all execution activities.</div>
+        <div class="saf-li"><div class="saf-dot"></div>Full compliance with client safety systems and site protocols.</div>
+      </div>
+    </div>
+    <div class="saf-right">
+      <div class="sec-label reveal">Priority Level</div>
+      <div class="saf-big reveal d1">Zero</div>
+      <div class="saf-sub reveal d2">Tolerance for Incidents</div>
+      <div class="saf-list reveal d3">
+        <div class="saf-li"><div class="saf-dot"></div>100% PPE compliance rate across all active project sites.</div>
+        <div class="saf-li"><div class="saf-dot"></div>Pre-job safety analysis conducted on every new task assignment.</div>
+        <div class="saf-li"><div class="saf-dot"></div>10+ years of disciplined, incident-focused execution culture.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION & VISION -->
+<section id="mission">
+  <div class="mv-hd">
+    <div class="sec-label reveal" style="justify-content:center;"><span style="width:22px;height:1px;background:var(--blue-mid);display:block;"></span>Our Purpose</div>
+    <h2 class="sec-title reveal d1" style="text-align:center;margin-top:16px;">Mission & Vision</h2>
+  </div>
+  <div class="mv-grid">
+    <div class="mv-card reveal"><div class="mv-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="mv-title">Timely & Reliable Delivery</div><div class="mv-body">To support client operations by completing projects within agreed timelines through effective planning, coordination, and disciplined on-site execution.</div></div>
+    <div class="mv-card reveal d1"><div class="mv-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mv-title">Safe & Disciplined Execution</div><div class="mv-body">To execute all mechanical and engineering activities with strict adherence to safety norms, disciplined work practices, and responsible site behavior at all times.</div></div>
+    <div class="mv-card reveal d2"><div class="mv-ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="mv-title">Quality-Focused Workmanship</div><div class="mv-body">To deliver consistent quality through skilled manpower, proper supervision, and meticulous attention to workmanship at every stage of project execution.</div></div>
+  </div>
+  <div class="vis-strip reveal d3">
+    <div class="vs-left"><div class="sec-label">Our Vision</div><div class="vs-qm">"</div></div>
+    <p class="vs-text">To establish Vexo Engineering as a trusted and reliable engineering services company known for disciplined execution, safe work practices, and consistent quality — expanding our operational reach across India while becoming the preferred service partner for industrial clients seeking dependable engineering support.</p>
+  </div>
+</section>
+
+<!-- WHY CHOOSE -->
+<section id="why">
+  <div class="sec-label reveal">Why Vexo</div>
+  <h2 class="sec-title reveal d1">Why Choose<br>Vexo Engineering</h2>
+  <div class="why-grid">
+    <div class="why-card reveal"><div class="wc-n">01</div><div class="wc-t">Competitive Pricing</div><div class="wc-b">Cost-effective pricing with clear scope definition — ensuring value-driven execution without compromising on safety or workmanship quality. Transparent billing.</div></div>
+    <div class="why-card reveal d1"><div class="wc-n">02</div><div class="wc-t">Timely Project Completion</div><div class="wc-b">Our disciplined execution approach and on-site supervision enable consistent project completion within agreed timelines, supporting uninterrupted client operations.</div></div>
+    <div class="why-card reveal d2"><div class="wc-n">03</div><div class="wc-t">10+ Years of Experience</div><div class="wc-b">Backed by over a decade of field exposure, our skilled workforce delivers reliable mechanical execution across diverse and demanding industrial environments.</div></div>
+    <div class="why-card reveal d3"><div class="wc-n">04</div><div class="wc-t">PAN India Execution</div><div class="wc-b">Ability to mobilize manpower and resources efficiently to project sites anywhere across India while maintaining uniform, consistent execution standards.</div></div>
+  </div>
+  <div class="why-strip reveal d4">
+    <div class="ws-item">Professionally Managed</div>
+    <div class="ws-item">Safety First Culture</div>
+    <div class="ws-item">Skilled Trained Workforce</div>
+    <div class="ws-item">Site-Specific Solutions</div>
+    <div class="ws-item">Long-Term Client Relationships</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-label reveal">Get In Touch</div>
+  <h2 class="sec-title reveal d1">Let's Work<br>Together</h2>
+  <div class="ct-layout">
+    <div class="reveal d2">
+      <p class="sec-body">We welcome enquiries from industrial clients seeking reliable engineering partners. Reach out to discuss your project requirements, site conditions, and how Vexo Engineering can support your operations.</p>
+      <div class="ct-details">
+        <div class="ct-row"><div class="ct-lbl">Office Address</div><div class="ct-val">Industrial Area, Chandigarh Road,<br>Unchi Mangli, Ramgarh,<br>Ludhiana — 141123, Punjab</div></div>
+        <div class="ct-row"><div class="ct-lbl">Mobile</div><div class="ct-val"><a href="tel:+918521860186">+91 85218 60186</a></div></div>
+        <div class="ct-row"><div class="ct-lbl">Email</div><div class="ct-val"><a href="/cdn-cgi/l/email-protection#0274677a6d2c676c656b6c6767706b6c6542656f636b6e2c616d6f"><span class="__cf_email__" data-cfemail="5f293a2730713a313836313a3a2d3631381f38323e3633713c3032">[email&#160;protected]</span></a></div></div>
+      </div>
+      <div class="ct-gstin"><div class="ct-gstin-l">GSTIN</div><div class="ct-gstin-v">03EPLPR7475J1Z6</div></div>
+    </div>
+    <div class="reveal d3">
+      <div class="f-row"><div class="f-group"><label class="f-label">Full Name</label><input type="text" class="f-input" placeholder="Your name"></div><div class="f-group"><label class="f-label">Company</label><input type="text" class="f-input" placeholder="Your company"></div></div>
+      <div class="f-row"><div class="f-group"><label class="f-label">Phone</label><input type="tel" class="f-input" placeholder="+91 00000 00000"></div><div class="f-group"><label class="f-label">Email</label><input type="email" class="f-input" placeholder="email@company.com"></div></div>
+      <div class="f-group"><label class="f-label">Service Required</label><select class="f-select"><option value="">Select a service</option><option>SS Pipeline Installation</option><option>Fire Fighting Line Installation</option><option>Mechanical Manpower Supply</option><option>MS &amp; SS Fabrication</option><option>Erection Works</option><option>Mechanical Spares Supply</option><option>General Enquiry</option></select></div>
+      <div class="f-group"><label class="f-label">Project Details</label><textarea class="f-textarea" placeholder="Describe your requirements, project location, scale, and timeline..."></textarea></div>
+      <button class="f-btn" onclick="sendForm(this)">Send Enquiry →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div class="ft-logo">
+      <img src="Vexo_engineering.png" alt="Vexo">
+      <span class="ft-logo-t">Vexo Engineering</span>
+    </div>
+    <ul class="ft-nav">
+      <li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#expertise">Expertise</a></li>
+      <li><a href="#quality">Quality</a></li><li><a href="#mission">Mission</a></li><li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="ft-bot">
+    <span class="ft-copy">© 2025 Vexo Engineering. All rights reserved. GSTIN: 03EPLPR7475J1Z6</span>
+    <span class="ft-tag">Reliable Mechanical Solutions · PAN India</span>
+  </div>
+</footer>
+ 
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Cursor
+const cur=document.getElementById('cur'),cr=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.svc-card,.why-card,.ind-item,.mv-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.transform='translate(-50%,-50%) scale(2.2)';cr.style.transform='translate(-50%,-50%) scale(1.4)';});
+  el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';cr.style.transform='translate(-50%,-50%) scale(1)';});
+});
+
+// Nav
+const nav=document.getElementById('nav');
+const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>30);
+window.addEventListener('scroll',onScroll); onScroll();
+
+function toggleNav(){document.getElementById('navLinks').classList.toggle('open');}
+document.querySelectorAll('#navLinks a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
+
+// Scroll reveal
+const els=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+      e.target.querySelectorAll('.q-bar-fill').forEach(b=>setTimeout(()=>{b.style.width=b.dataset.w+'%';},450));
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.1});
+els.forEach(el=>io.observe(el));
+
+// Quality bar observer
+document.querySelectorAll('.q-card').forEach(c=>{
+  const bi=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const b=e.target.querySelector('.q-bar-fill');
+        if(b)setTimeout(()=>{b.style.width=b.dataset.w+'%';},500);
+        bi.unobserve(e.target);
+      }
+    });
+  },{threshold:.3});
+  bi.observe(c);
+});
+
+// Form
+
+// Form — uses no-cors URLSearchParams to bypass CORS with Google Apps Script
+function sendForm(btn){
+  const name    = document.querySelector('.f-input[placeholder="Your name"]').value.trim();
+  const company = document.querySelector('.f-input[placeholder="Your company"]').value.trim();
+  const phone   = document.querySelector('input[type="tel"]').value.trim();
+  const email   = document.querySelector('input[type="email"]').value.trim();
+  const service = document.querySelector('.f-select').value;
+  const message = document.querySelector('.f-textarea').value.trim();
+
+  if(!name || !email){ alert('Please fill in at least your name and email.'); return; }
+
+  const orig = btn.textContent;
+  btn.textContent = 'Sending…'; btn.disabled = true; btn.style.opacity = '.7';
+
+  // URLSearchParams avoids CORS preflight — works with Google Apps Script doPost(e.parameter)
+  const params = new URLSearchParams({ name, company, phone, email, service, message });
+
+  fetch("https://script.google.com/macros/s/AKfycbxUj3G-sqttoZMvVRukfN5zWyAGtceWLn3gCvDozY4xLHeBKM3MOZ_25m9nrZZBprB2/exec", {
+    method: "POST",
+    mode: "no-cors",           // Google Apps Script requires no-cors
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString()
+  })
+  .then(() => {
+    btn.textContent = '✓ Enquiry Sent';
+    btn.style.opacity = '1';
+    btn.style.background = '#1e6091';
+    btn.style.color = '#fff';
+    btn.disabled = false;
+    // Clear form
+    document.querySelectorAll('.f-input,.f-textarea').forEach(el => el.value = '');
+    document.querySelector('.f-select').value = '';
+    setTimeout(()=>{ btn.textContent = orig; btn.style.background=''; btn.style.color=''; }, 4000);
+  })
+  .catch(() => {
+    btn.textContent = '✗ Try Again'; btn.style.opacity='1'; btn.disabled=false;
+    setTimeout(()=>{ btn.textContent=orig; },3000);
+  });
+}
+
+// Logo fallback
+document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.display='none';}));
+</script>
+</body>
+</html>
