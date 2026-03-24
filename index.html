@@ -191,6 +191,10 @@ p.sec-body { font-size:.95rem; font-weight:300; line-height:1.88; color:var(--mi
   background: var(--line);
 }
 
+.svc-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .svc-card {
   background: #0a0a09;
   padding: 36px 32px 42px;
@@ -514,6 +518,9 @@ footer { border-top:1px solid var(--line); background:var(--darker); padding:44p
 
   /* Services */
   .svc-grid{grid-template-columns:1fr;}
+  .svc-grid-4 {
+    grid-template-columns: repeat(1fr);
+  }
   .svc-bottom-strip{grid-template-columns:1fr 1fr;}
   .svc-group-header{flex-wrap:wrap;gap:10px;}
   .svc-group-count{margin-left:0;}
@@ -959,7 +966,8 @@ footer { border-top:1px solid var(--line); background:var(--darker); padding:44p
       <span class="svc-group-title">Mechanical &amp; Structural Works</span>
       <span class="svc-group-count">04 Services</span>
     </div>
-    <div class="svc-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="svc-grid svc-grid-4">
+    
 
       <div class="svc-card">
         <div class="svc-card-num">07 — Mech &amp; Structural</div>
@@ -988,7 +996,6 @@ footer { border-top:1px solid var(--line); background:var(--darker); padding:44p
         <div class="svc-card-name">Conveyor Works</div>
         <div class="svc-card-desc">Installation and erection of belt, screw, and chain conveyor systems — structure fabrication, idler and pulley installation, belt tensioning, drive unit mounting, and full mechanical alignment before commissioning.</div>
       </div>
-
     </div>
   </div>
 
